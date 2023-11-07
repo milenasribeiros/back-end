@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/aula-02-spring-data-main/aula-02-spring-data.iml" filepath="$PROJECT_DIR$/aula-02-spring-data-main/aula-02-spring-data.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/aula-02-spring-data-main.iml" filepath="$PROJECT_DIR$/.idea/aula-02-spring-data-main.iml" />
+    </modules>
+  </component>
+</project>
