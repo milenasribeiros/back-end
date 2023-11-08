@@ -22,13 +22,13 @@ import com.example.demo.servicos.ProdutoServico;
 @RestController
 @RequestMapping("/produtos")
 public class ProdutoController {
-	
+
 	@Autowired
 	private ProdutoServico servico;
-	
+
 	@PostMapping
 	public ResponseEntity<String> insert(@RequestBody ProdutoDto produto){
-		ProdutoDto prod = servico.insert(produto);
+		ProdutoDto prod = servico.create(produto);
 		return prod !=  null ? new ResponseEntity<>("Produto criado com sucesso", HttpStatus.CREATED)
 				: new ResponseEntity<>("Erro ao criar produto", HttpStatus.BAD_REQUEST);
 	}
@@ -41,9 +41,16 @@ public class ProdutoController {
 				: new ResponseEntity<>(list, HttpStatus.BAD_REQUEST);
 	}
 
+	@GetMapping("/produto-jpa-id/{id}")
+	public ResponseEntity<Optional<ProdutoDto>> findById(@PathVariable Integer id){
+		Optional<ProdutoDto> prod = servico.findById(id);
+		return prod.isPresent() ?  new ResponseEntity<>(prod, HttpStatus.OK)
+				: new ResponseEntity<>(prod, HttpStatus.BAD_REQUEST);
+	}
+
 	@PutMapping("/produto-update")
 	public ResponseEntity<String> update(@RequestBody ProdutoDto produto) {
-		ProdutoDto prod = servico.insert(produto);
+		ProdutoDto prod = servico.create(produto);
 		return prod != null ? new ResponseEntity<>("Produto atualizado com sucesso", HttpStatus.OK)
 				: new ResponseEntity<>("Erro ao atualizar produto", HttpStatus.BAD_REQUEST);
 	}
@@ -51,24 +58,23 @@ public class ProdutoController {
 	@DeleteMapping("/produto-delete/{id}")
 	public ResponseEntity<String> delete(@PathVariable Integer id){
 		servico.delete(id);
-		Optional<Produto> prod = servico.findById(id);
-		return !prod.isPresent() ? new ResponseEntity<>("Produto deletado com sucesso", HttpStatus.OK) 
+		Optional<ProdutoDto> prod = servico.findById(id);
+		return !prod.isPresent() ? new ResponseEntity<>("Produto deletado com sucesso", HttpStatus.OK)
 							 : new ResponseEntity<>("Erro ao deletar produto", HttpStatus.BAD_REQUEST);
-		
-	}
-	
-	@GetMapping("/produto-jpa-id-preco-jpql/{id}/{preco}")
-	public ResponseEntity<Optional<Produto>> findByIdPrecoJpql(@PathVariable Integer id, @PathVariable Double preco){
-		Optional<Produto> prod = servico.findByIdPrecoJpql(id, preco);
-		return prod.isPresent() ?  new ResponseEntity<>(prod, HttpStatus.OK) 
-							    : new ResponseEntity<>(prod, HttpStatus.BAD_REQUEST);
-	}
-	
-	@GetMapping("/produto-jpa-id-preco-sql/{id}/{preco}")
-	public ResponseEntity<Optional<Produto>> findByIdPrecoSql(@PathVariable Integer id, @PathVariable Double preco){
-		Optional<Produto> prod = servico.findByIdPrecoSql(id, preco);
-		return prod.isPresent() ?  new ResponseEntity<>(prod, HttpStatus.OK) 
-							    : new ResponseEntity<>(prod, HttpStatus.BAD_REQUEST);
+
 	}
 
+	@GetMapping("/produto-jpa-id-preco-jpql/{id}/{preco}")
+	public ResponseEntity<Optional<ProdutoDto>> findByIdPrecoJpql(@PathVariable Integer id, @PathVariable Double preco){
+		Optional<ProdutoDto> prod = servico.findProdutoParam(id, preco);
+		return prod.isPresent() ?  new ResponseEntity<>(prod, HttpStatus.OK)
+				: new ResponseEntity<>(prod, HttpStatus.BAD_REQUEST);
+	}
+
+	@GetMapping("/produto-jpa-id-nome-sql/{id}/{preco}")
+	public ResponseEntity<Optional<ProdutoDto>> findByIdNomeSql(@PathVariable Integer id, @PathVariable String nome){
+		Optional<ProdutoDto> prod = servico.findProdutoNomeSQL(id, nome);
+		return prod.isPresent() ?  new ResponseEntity<>(prod, HttpStatus.OK)
+				: new ResponseEntity<>(prod, HttpStatus.BAD_REQUEST);
+	}
 }

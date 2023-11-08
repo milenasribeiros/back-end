@@ -18,4 +18,7 @@ public interface ProdutoRepositorioJPA extends JpaRepository<Produto, Integer> {
 			+ "AND p.preco <= :preco", nativeQuery = true)
 	Optional<Produto> findProdutoParamSql(Integer id, Double preco);
 
+    Optional<Produto> findProdutoByNome(Integer id, String nome);
+
+	Optional<Produto> findProdutoByNomeSQL(Integer id, String nome);
 }

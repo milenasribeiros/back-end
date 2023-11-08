@@ -17,36 +17,54 @@ public class ProdutoServico {
 	@Autowired
 	private ProdutoRepositorioJPA produtoRepositorioJPA;
 
-	public ProdutoDto insert(ProdutoDto produto) {
+
+	public ProdutoDto create(ProdutoDto produto){
 		Produto prod = new Produto(produto.getId(), produto.getNome(), produto.getPreco());
 		return new ProdutoDto(produtoRepositorioJPA.save(prod));
 	}
 
-	public List<ProdutoDto> findAll() {
+
+	public List<ProdutoDto> findAll(){
 		List<Produto> list = produtoRepositorioJPA.findAll();
 		return list.stream().map(x -> new ProdutoDto(x)).collect(Collectors.toList());
 
 	}
 
-	
-	public Optional<Produto> findById(Integer id) {
-		return produtoRepositorioJPA.findById(id);
-		
+	public Optional<ProdutoDto> findById(Integer id) {
+		Optional<Produto> prod = produtoRepositorioJPA.findById(id);
+		Optional<ProdutoDto> prodDto = prod.map(produto -> {
+			return new ProdutoDto(produto.getId(), produto.getNome(), produto.getPreco());
+		});
+		return prodDto;
 	}
 	
 	public void delete(Integer id) {
 		produtoRepositorioJPA.deleteById(id);
 	}
-	
-	public Optional<Produto> findByIdPrecoJpql(Integer id, Double preco) {
-		return produtoRepositorioJPA.findProdutoParam(id, preco);
-		
+
+	public Optional<ProdutoDto> findProdutoParam(Integer id, Double preco){
+		Optional<Produto> produtoEncontrado = produtoRepositorioJPA.findProdutoParam(id, preco);
+		Optional<ProdutoDto> produtoDtoEncontrado = produtoEncontrado.map(produto -> {
+			return new ProdutoDto(produto.getId(), produto.getNome(), produto.getPreco());
+		});
+		return produtoDtoEncontrado;
 	}
-	
-	public Optional<Produto> findByIdPrecoSql(Integer id, Double preco) {
-		return produtoRepositorioJPA.findProdutoParamSql(id, preco);
-		
+
+	public Optional<ProdutoDto> findProdutoNome(Integer id, String nome){
+		Optional<Produto> produtoEncontradoNome = produtoRepositorioJPA.findProdutoByNome(id, nome);
+		Optional<ProdutoDto> produtoDtoEncontradoNome = produtoEncontradoNome.map(produto -> {
+			return new ProdutoDto(produto.getId(), produto.getNome(), produto.getPreco());
+		});
+		return produtoDtoEncontradoNome;
 	}
-	
+
+	public Optional<ProdutoDto> findProdutoNomeSQL(Integer id, String nome){
+		Optional<Produto> produtoEncontradoNomeSQL = produtoRepositorioJPA.findProdutoByNomeSQL(id, nome);
+		Optional<ProdutoDto> produtoDtoEncontrado = produtoEncontradoNomeSQL.map(produto -> {
+			return new ProdutoDto(produto.getId(), produto.getNome(), produto.getPreco());
+		});
+		return produtoDtoEncontrado;
+	}
+
 
 }
