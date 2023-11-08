@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import java.util.List;
 import java.util.Optional;
 
+import dtos.ProdutoDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,34 +27,27 @@ public class ProdutoController {
 	private ProdutoServico servico;
 	
 	@PostMapping
-	public ResponseEntity<String> insert(@RequestBody Produto produto){
-		Produto prod = servico.insert(produto);
-		return prod !=  null ? new ResponseEntity<>("Produto criado com sucesso", HttpStatus.CREATED) : new ResponseEntity<>("Erro ao criar produto", HttpStatus.BAD_REQUEST);
-		
+	public ResponseEntity<String> insert(@RequestBody ProdutoDto produto){
+		ProdutoDto prod = servico.insert(produto);
+		return prod !=  null ? new ResponseEntity<>("Produto criado com sucesso", HttpStatus.CREATED)
+				: new ResponseEntity<>("Erro ao criar produto", HttpStatus.BAD_REQUEST);
 	}
-	
+
+
 	@GetMapping
-	public ResponseEntity<List<Produto>> findAll(){
-		List<Produto> list = servico.findAll();
-		return !list.isEmpty() ?  new ResponseEntity<>(list, HttpStatus.OK) 
-							   : new ResponseEntity<>(list, HttpStatus.BAD_REQUEST);
+	public ResponseEntity<List<ProdutoDto>> findAll(){
+		List<ProdutoDto> list = servico.findAll();
+		return !list.isEmpty() ?  new ResponseEntity<>(list, HttpStatus.OK)
+				: new ResponseEntity<>(list, HttpStatus.BAD_REQUEST);
 	}
-	
-	@GetMapping("/produto-jpa-id/{id}")
-	public ResponseEntity<Optional<Produto>> findById(@PathVariable Integer id){
-		Optional<Produto> prod = servico.findById(id);
-		return prod.isPresent() ?  new ResponseEntity<>(prod, HttpStatus.OK) 
-							    : new ResponseEntity<>(prod, HttpStatus.BAD_REQUEST);
-	}
-	
+
 	@PutMapping("/produto-update")
-	public ResponseEntity<String> update(@RequestBody Produto produto){
-		Produto prod = servico.insert(produto);
-		return prod !=  null ? new ResponseEntity<>("Produto atualizado com sucesso", HttpStatus.OK) 
-							 : new ResponseEntity<>("Erro ao atualizar produto", HttpStatus.BAD_REQUEST);
-		
+	public ResponseEntity<String> update(@RequestBody ProdutoDto produto) {
+		ProdutoDto prod = servico.insert(produto);
+		return prod != null ? new ResponseEntity<>("Produto atualizado com sucesso", HttpStatus.OK)
+				: new ResponseEntity<>("Erro ao atualizar produto", HttpStatus.BAD_REQUEST);
 	}
-	
+
 	@DeleteMapping("/produto-delete/{id}")
 	public ResponseEntity<String> delete(@PathVariable Integer id){
 		servico.delete(id);

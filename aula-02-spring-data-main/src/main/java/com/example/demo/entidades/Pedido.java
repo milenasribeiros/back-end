@@ -1,5 +1,7 @@
 package com.example.demo.entidades;
 
+import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -14,8 +16,9 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name="tb_pedido")
-public class Pedido {
-	
+public class Pedido implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
@@ -24,7 +27,7 @@ public class Pedido {
 	@ManyToMany
 	@JoinTable(name="tb_pedido_produto", joinColumns = @JoinColumn(name="id_pedido"),
 	inverseJoinColumns = @JoinColumn(name="id_produto"))
-	private Set<Produto> produtos;
+	private Set<Produto> produtos = new HashSet<>();
 	
 	public Pedido() {}
 
@@ -34,6 +37,9 @@ public class Pedido {
 		this.endereco = endereco;
 	}
 
+	public Pedido(String endereco) {
+		this.endereco = endereco;
+	}
 	public Integer getId() {
 		return id;
 	}
@@ -49,9 +55,9 @@ public class Pedido {
 	public void setEndereco(String endereco) {
 		this.endereco = endereco;
 	}
-	
-	public void setProdutos(Set<Produto> produtos) {
-		this.produtos = produtos;
+
+	public Set<Produto> getProdutos() {
+		return produtos;
 	}
 
 	@Override
